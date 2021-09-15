@@ -2,11 +2,19 @@ import java.util.Date;
 
 public class Reiziger {
     int id;
-    String voorletters;
-    String tussenvoegsel;
-    String achternaam;
-    String geboortedatum;
+    private String voorletters;
+    private String tussenvoegsel;
+    private String achternaam;
+    private String geboortedatum;
+    private Adres adres;
 
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
+    public Adres getAdres() {
+        return adres;
+    }
 
     public Reiziger(){
 

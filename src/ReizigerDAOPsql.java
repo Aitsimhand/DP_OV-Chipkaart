@@ -1,7 +1,5 @@
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 public class ReizigerDAOPsql implements ReizigerDAO {
 
@@ -46,16 +44,16 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
     public boolean update(Reiziger reiziger){
 
-        int reiziger_ID = reiziger.getId();
-        String query = "UPDATE reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES( ?, ?, ?, ?, ?) WHERE reiziger_id=" + reiziger_ID;
+
+        String query = "UPDATE reiziger SET voorletters=?, tussenvoegsel=?, achternaam=?, geboortedatum=? WHERE reiziger_id=?";
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setInt(1, reiziger.getId());
-            preparedStatement.setString(2, reiziger.getVoorletters());
-            preparedStatement.setString(3, reiziger.getTussenvoegsel());
-            preparedStatement.setString(4, reiziger.getAchternaam());
-            preparedStatement.setDate(5, java.sql.Date.valueOf(reiziger.getGeboortedatum()));
+            preparedStatement.setString(1, reiziger.getVoorletters());
+            preparedStatement.setString(2, reiziger.getTussenvoegsel());
+            preparedStatement.setString(3, reiziger.getAchternaam());
+            preparedStatement.setDate(4, java.sql.Date.valueOf(reiziger.getGeboortedatum()));
+            preparedStatement.setInt(5, reiziger.getId() );
             preparedStatement.execute();
             return true;
         }
@@ -108,8 +106,6 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                         + myRs.getString(2) + ". " + myRs.getString(4)
                         + " " + "(" + myRs.getString(5) + ")");
 
-
-
             }
 
             return voorbeeld;
@@ -124,10 +120,11 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
     public List<Reiziger> findByGbdatum(String datum){
         ArrayList<Reiziger> reizigerLijst = new ArrayList<>();
-        String query = "SELECT * FROM reiziger WHERE geboortedatum=" + java.sql.Date.valueOf(datum);
+        String query = "SELECT * FROM reiziger WHERE geboortedatum=?";
 
         try{
             PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setDate(1, java.sql.Date.valueOf(datum));
             ResultSet resultSet = preparedStatement.executeQuery();
 
 
@@ -137,8 +134,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getString(5));
-
+                System.out.println(reiziger);
                 reizigerLijst.add(reiziger);
+
             }
 
             return reizigerLijst;
@@ -156,7 +154,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     public List<Reiziger> findAll(){
-        ArrayList<Reiziger> reizigersList = new ArrayList<Reiziger>();
+        ArrayList<Reiziger> reizigersList = new ArrayList<>();
         String query = "SELECT * FROM reiziger";
 
         try {

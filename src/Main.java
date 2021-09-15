@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.sql.*;
 import java.util.List;
 
@@ -9,9 +11,11 @@ public class Main {
 
         Connection conn;
         conn  = DriverManager.getConnection(url);
-        ReizigerDAOPsql reizigerDAOPsql = new ReizigerDAOPsql(conn);
+        ReizigerDAO reizigerDAOPsql = new ReizigerDAOPsql(conn);
+        AdresDAO adresDAOPsql = new AdresDAOPsql(conn);
         System.out.println("Objet has been created");
         testReizigerDAO(reizigerDAOPsql);
+        testAdresDAO(adresDAOPsql, reizigerDAOPsql);
 
 
     }
@@ -19,7 +23,6 @@ public class Main {
 
     private static void testReizigerDAO( ReizigerDAO rdao) throws SQLException {
 
-        Connection conn;
         System.out.println("\n---------- Test ReizigerDAO -------------");
 
 
@@ -29,7 +32,6 @@ public class Main {
         for (Reiziger r : reizigers) {
             System.out.println(r);
         }
-        System.out.println();
 
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
@@ -47,7 +49,25 @@ public class Main {
         System.out.println(rdao.findById(77));
 
         System.out.println("De {TEST} van de functie findByGbdatum()" + "\n" + "---------------------------------------");
-        System.out.println(rdao.findByGbdatum("1981-03-14"));
+        for (Reiziger r: rdao.findByGbdatum("1981-03-14")
+             ) {
+            System.out.println(r);
+            
+        }
+
+
+
+
+
+        // De gegevens van een bestaande reiziger worden aangepast in een database.
+
+        System.out.println("De {TEST} van de functie findByGbdatum()" + "\n" + "---------------------------------------");
+
+        String geboorteDatum = "1950-04-12";
+        sietske.setGeboortedatum(geboorteDatum);
+        rdao.update(sietske);
+        System.out.println("Reiziger Sietske is geupdate in de database.");
+
 
         // De verwijder een specifieke reiziger uit de database.
 
@@ -64,12 +84,30 @@ public class Main {
 
 
 
-        // De gegevens van een bestaande reiziger worden aangepast in een database.
-
-        String geboorteDatum = "1950-04-12";
-        sietske.setGeboortedatum(geboorteDatum);
-        rdao.update(sietske);
-        System.out.println("Reiziger Sietske is geupdate in de database.");
     }
+
+    private static void testAdresDAO(AdresDAO adresDAO, ReizigerDAO reizigerDAO) throws SQLException{
+        System.out.println("Hier beginnen de test's van de Adres klasse" + "\n" + "------------------------------------------------" );
+
+
+        // Haal alle reizigers op uit de database
+        List<Adres> adressen = adresDAO.findAll();
+        System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende Adressen:");
+        for (Adres a : adressen) {
+            System.out.println(a);
+        }
+
+        // Hier word een nieuw adres aangemaakt en deze word opgeslagen in de database.
+        Reiziger reizigerA = new Reiziger(6, "A","", "Ait Si'Mhand", "24-10-1997" );
+        reizigerDAO.save(reizigerA);
+
+        Adres adresAchraf = new Adres(6, "2964BL", "26", "Irenestraat", "Groot-Ammers");
+        reizigerA.setAdres(adresAchraf);
+        adresDAO.save(adresAchraf);
+        System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.save() ");
+
+
+    }
+
 
 }
