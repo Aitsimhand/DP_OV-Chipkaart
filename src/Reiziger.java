@@ -7,6 +7,15 @@ public class Reiziger {
     private String achternaam;
     private String geboortedatum;
     private Adres adres;
+    private OVChipkaart ovChipkaart;
+
+    public void setOvChipkaart(OVChipkaart ovChipkaart) {
+        this.ovChipkaart = ovChipkaart;
+    }
+
+    public OVChipkaart getOvChipkaart() {
+        return ovChipkaart;
+    }
 
     public void setAdres(Adres adres) {
         this.adres = adres;

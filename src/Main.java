@@ -1,6 +1,7 @@
 import org.w3c.dom.ls.LSOutput;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -61,7 +62,6 @@ public class Main {
 
         // De gegevens van een bestaande reiziger worden aangepast in een database.
 
-        System.out.println("De {TEST} van de functie findByGbdatum()" + "\n" + "---------------------------------------");
 
         String geboorteDatum = "1950-04-12";
         sietske.setGeboortedatum(geboorteDatum);
@@ -82,8 +82,6 @@ public class Main {
             e.printStackTrace();
         }
 
-
-
     }
 
     private static void testAdresDAO(AdresDAO adresDAO, ReizigerDAO rdao) throws SQLException{
@@ -91,13 +89,16 @@ public class Main {
 
 
         // Haal alle reizigers op uit de database
+        System.out.println("Hier begint de test van de .save() functie van de adresDAO" + "\n" + "------------------------------------------------" );
+
         List<Adres> adressen = adresDAO.findAll();
         System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende Adressen:");
         for (Adres a : adressen) {
             System.out.println(a);
         }
 
-        // Hier word een nieuw adres aangemaakt en deze word opgeslagen in de database.
+        // Hier wordt een nieuw adres aangemaakt en deze word opgeslagen in de database.
+        System.out.println("Hier begint de test van de .save() functie van de adresDAO" + "\n" + "------------------------------------------------" );
         String gbDatum = "1997-10-24";
         Reiziger reizigerA = new Reiziger(6, "A","", "Ait Si'Mhand", gbDatum );
         rdao.save(reizigerA);
@@ -106,16 +107,51 @@ public class Main {
         reizigerA.setAdres(adresAchraf);
         System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.save()");
         adresDAO.save(adresAchraf);
-        System.out.println(adressen.size() + " reizigers\n");
+        List<Adres> adressenNaUpdate = adresDAO.findAll();
+        System.out.println(adressenNaUpdate.size() + " reizigers\n");
+
+        //Hier wordt de update() functie van Adres aangeroepen en getest.
+        System.out.println("Hier begint de test van de update functie van de adres klasse" + "\n" + "------------------------------------------------" );
+        adresAchraf.setHuisnummer("30");
+        try{
+            adresDAO.update(adresAchraf);
+            System.out.println("Het adres is geupdate.");
+        }
+
+        catch (Exception e){
+            System.out.println("Het is niet gelukt om het adres te updaten in de database");
+            e.printStackTrace();
+        }
+
+        //Hier wordt de functie .findbyreiziger() getest.
+        System.out.println("Hier begint de test van de .findByReiziger() functie van de adresDAO" + "\n" + "------------------------------------------------" );
+        try {
+            adresDAO.findByReiziger(reizigerA);
+            System.out.println("Adres is opgehaald.");
+        }
+
+        catch (Exception e){
+            System.out.println("Het is niet gelukt om de het adres te vinden bij de reiziger.");
+            e.printStackTrace();
+        }
 
         //Hier word de delete() functie van adres aangeroepen.
+        System.out.println("Hier begint de test van de .delete functie van de adresDAO" + "\n" + "------------------------------------------------" );
         System.out.println("Test delete() methode");
         System.out.println("Eerst" + adressen.size());
-        adressen.forEach((value) -> System.out.println(value));
+        adressenNaUpdate.forEach((value) -> System.out.println(value));
         System.out.println("[test] delete() geeft -> ");
         adresDAO.delete(adresAchraf); //delete adres
         rdao.delete(reizigerA);
-        adressen.forEach((value) -> System.out.println(value));
+        List<Adres> adressenNaDelete = new ArrayList<>(adresDAO.findAll());
+        adressenNaDelete.forEach((value) -> System.out.println(value));
+
+
+
+
+
+
+
 
 
 

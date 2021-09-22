@@ -5,7 +5,6 @@ import java.util.List;
 public class AdresDAOPsql implements AdresDAO{
 
     Connection conn;
-    ReizigerDAO rdao;
     String url = "jdbc:postgresql://localhost/ovchip?user=postgres&password=rJFQu34u";
 
     public AdresDAOPsql(Connection conn){

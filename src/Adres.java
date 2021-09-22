@@ -69,6 +69,6 @@ public class Adres {
 
     @Override
     public String toString() {
-        return "ID:" + id + " POSTCODE:" + postcode + " HUISNUMMER:" + huisnummer + " STRAAT:" + straat + "WOONPLAATS:" + woonplaats + "\n" + " Aan dit adres zijn de volgende reizgers gekoppeld: ";
+        return "ID:" + id + " POSTCODE:" + postcode + " HUISNUMMER:" + huisnummer + " STRAAT:" + straat + "WOONPLAATS:" + woonplaats + "\n";
     }
 }
