@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public interface OVChipkaartDAO {
     boolean save(OVChipkaart ovChipkaart);
     boolean update(OVChipkaart ovChipkaart);
     boolean delete(OVChipkaart ovChipkaart);
-    Adres findByReiziger(Reiziger reiziger);
-    ArrayList<Adres> findAll();
+    OVChipkaart findByReiziger(Reiziger reiziger);
+    List<OVChipkaart> findAll();
 
 }

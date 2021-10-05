@@ -14,9 +14,10 @@ public class Main {
         conn  = DriverManager.getConnection(url);
         ReizigerDAO reizigerDAOPsql = new ReizigerDAOPsql(conn);
         AdresDAO adresDAOPsql = new AdresDAOPsql(conn);
-        System.out.println("Objet has been created");
+        OVChipkaartDAO ovChipkaartDAOsql = new OVChipkaartDAOPsql(conn);
         testReizigerDAO(reizigerDAOPsql);
         testAdresDAO(adresDAOPsql, reizigerDAOPsql);
+        testOVchipkaartDAO(adresDAOPsql, reizigerDAOPsql, ovChipkaartDAOsql);
 
 
     }
@@ -146,14 +147,82 @@ public class Main {
         List<Adres> adressenNaDelete = new ArrayList<>(adresDAO.findAll());
         adressenNaDelete.forEach((value) -> System.out.println(value));
 
+    }
+
+    private static void testOVchipkaartDAO(AdresDAO adresDAO, ReizigerDAO reizigerDAO, OVChipkaartDAO ovChipkaartDAO){
+        System.out.println("Hier beginnen de test's van de OVchipkaart klasse" + "\n" + "------------------------------------------------" );
+
+        // Haal alle kaarten op uit de database
+        System.out.println("Hier begint de test van de OVchipkaart.findall() functie van de OVchipkaartDAO" + "\n" + "------------------------------------------------" );
+        List<OVChipkaart> ovChipkaarts = ovChipkaartDAO.findAll();
+        System.out.println("[Test] OVchipkaartDAO.findAll() geeft de volgende ov's:");
+        for (OVChipkaart ov : ovChipkaarts) {
+            System.out.println(ov);
+        }
 
 
+        //Hier wordt er een nieuw OVchipkaart object aangemaakt en gepersisteerd in de datbase.
+        OVChipkaart ovChipkaart = new OVChipkaart();
+        ovChipkaart.setKaartNummer(12345);
+        ovChipkaart.setGeldigTot("2022-10-24");
+        ovChipkaart.setKlasse(1);
+        ovChipkaart.setSaldo(350.00);
+        ovChipkaart.setReizigerId(5);
+
+        // Hier wordt een bepaalde Chipkaart verwijderd uit de database.
+        System.out.println("Hier begint de test van OVChipkaart.delete()" + "\n" + "------------------------------------------------" );
+        try {
+            ovChipkaartDAO.delete(ovChipkaart);
+            System.out.println("De kaart is met succes verwijderd uit de database.");
+        }
+
+        catch (Exception e){
+            System.out.println("Het is niet gelukt om de kaart te verwijderen.");
+            e.printStackTrace();
+        }
+        ovChipkaarts = ovChipkaartDAO.findAll();
+
+        System.out.println("De database bevatte voor het opslaan " + ovChipkaarts.size() + "kaarten" + "\n");
+        for (OVChipkaart ov : ovChipkaarts) {
+            System.out.println(ov);
+        }
+
+        try {
+            ovChipkaartDAO.save(ovChipkaart);
+            System.out.println("De nieuwe chipkaart is opgeslagen.");
+        }
+
+        catch (Exception e){
+            System.out.println("Het is niet gelukt om het nieuwe opbject op te slaan in de database.");
+            e.printStackTrace();
+        }
+        ovChipkaarts = ovChipkaartDAO.findAll();
+        System.out.println("En de databse bevat na het opslaan " + ovChipkaarts.size());
+
+        // Hier wordt de update functie de OVchipkaartDAO aangeroepen en getest.
 
 
+        try {
+            ovChipkaart.setSaldo(20.00);
+            ovChipkaartDAO.update(ovChipkaart);
+            //Hier halen we de lijst opnieuw op om er zo voor te zorgen dat de lijst klopt en dus hier uitggeprint kan worden
+            ovChipkaarts = ovChipkaartDAO.findAll();
+            System.out.println("De kaart is met succes geupdate, het saldo is gewzijzigd");
+            for (OVChipkaart ov : ovChipkaarts){
+                System.out.println(ov);
+            }
+        }
 
+        catch (Exception e ){
+            System.out.println("Het is niet gelukt om de kaart te udpaten.");
+            e.printStackTrace();
+        }
 
-
-
+        System.out.println("Hier begint de test van OVChipkaart.findByReiziger" + "\n" + "------------------------------------------------" );
+        Reiziger reiziger = reizigerDAO.findById(5);
+        //Hier wordt de functie getest van OvchipkaartDAO.findByReiziger() getest
+        System.out.println(ovChipkaartDAO.findByReiziger(reiziger));
+        System.out.println("DONE");
 
     }
 
