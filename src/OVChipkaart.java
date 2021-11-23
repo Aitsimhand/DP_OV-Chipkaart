@@ -5,6 +5,7 @@ public class OVChipkaart {
     private double saldo;
     private int reizigerId;
     private Reiziger reiziger;
+    Product product;
 
     public Reiziger getReiziger() {
         return reiziger;
@@ -24,6 +25,14 @@ public class OVChipkaart {
 
     public OVChipkaart(){
 
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product){
+        this.product = product;
     }
 
     public int getKaartNummer() {

@@ -103,7 +103,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 
     }
 
-    public List<OVChipkaart> findAll(){
+    public ArrayList<OVChipkaart> findAll(){
         ArrayList<OVChipkaart> ovChipkaartArrayList = new ArrayList<>();
         String query = "SELECT * FROM ov_chipkaart";
 
