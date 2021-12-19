@@ -20,6 +20,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         }
     }
 
+    @Override
     public boolean save(Reiziger reiziger){
 
         String query = "INSERT INTO reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES( ?, ?, ?, ?, ?)";
@@ -41,7 +42,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             return false;
         }
     }
-
+    @Override
     public boolean update(Reiziger reiziger){
 
 
@@ -65,7 +66,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         }
 
     }
-
+    @Override
     public boolean delete(Reiziger reiziger){
         String query = "DELETE FROM reiziger WHERE reiziger_id=" + reiziger.getId();
 

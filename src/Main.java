@@ -1,3 +1,4 @@
+import org.postgresql.shaded.com.ongres.scram.common.ScramAttributes;
 import org.w3c.dom.ls.LSOutput;
 
 import java.sql.*;
@@ -15,9 +16,11 @@ public class Main {
         ReizigerDAO reizigerDAOPsql = new ReizigerDAOPsql(conn);
         AdresDAO adresDAOPsql = new AdresDAOPsql(conn);
         OVChipkaartDAO ovChipkaartDAOsql = new OVChipkaartDAOPsql(conn);
+        ProductDAO productDAOsql = new ProductDAOPsql(conn);
         testReizigerDAO(reizigerDAOPsql);
         testAdresDAO(adresDAOPsql, reizigerDAOPsql);
         testOVchipkaartDAO(adresDAOPsql, reizigerDAOPsql, ovChipkaartDAOsql);
+        testProductDAO(productDAOsql, ovChipkaartDAOsql);
 
 
     }
@@ -93,7 +96,7 @@ public class Main {
         System.out.println("Hier begint de test van de .save() functie van de adresDAO" + "\n" + "------------------------------------------------" );
 
         List<Adres> adressen = adresDAO.findAll();
-        System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende Adressen:");
+        System.out.println("[Test] adresDAO.findAll() geeft de volgende Adressen:");
         for (Adres a : adressen) {
             System.out.println(a);
         }
@@ -225,6 +228,68 @@ public class Main {
         System.out.println("DONE");
 
     }
+
+    public static void testProductDAO(ProductDAO productDAO, OVChipkaartDAO ovChipkaartDAO) throws SQLException{
+        //Hall alle producten op uit de database
+        System.out.println("Hier begint de test van de .save() functie van de productDAO\n"  + "------------------------------------------------" );
+        List<Product> producten = productDAO.findAll();
+        System.out.println("[Test] productDAO.findAll() geeft de volgende Adressen voor de .save():");
+        for (Product product: producten) {
+            System.out.println(product);
+            System.out.println("Aantal producten in de database voor de save: " + producten.size());
+        }
+
+        //Hier wordt een nieuw product aangemaakt en opgeslagen in de database.
+
+        Product testProduct = new Product(12345, "SeniorenProduct", "Mobiliteit voor ouderen", 25.00);
+        System.out.println("Producten in de database na de .save()");
+        try {
+            productDAO.save(testProduct);
+            List<Product> productenNaSave = productDAO.findAll();
+            for (Product product: productenNaSave){
+                System.out.println(product);
+
+            }
+            System.out.println("Aantal" + productenNaSave.size());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //Hier wordt het product geupdate en gepersisteerd in de database.
+        try {
+            testProduct.setPrijs(9999.00);
+            productDAO.update(testProduct);
+            System.out.println("                                " +testProduct.getProduct_nummer());
+            System.out.println("Producten in de databse na de .update()");
+            List<Product> productenNaUpdate = productDAO.findAll();
+            for (Product product: productenNaUpdate){
+                System.out.println(product);
+            }
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println("Hier word de delete functie getest");
+        try {
+            //Hier wordt het product verwijderd.
+            System.out.println("De producten in de database na het verwijderen");
+            productDAO.delete(testProduct);
+            List<Product> productenNaDelete = productDAO.findAll();
+            for (Product product :productenNaDelete ){
+                System.out.println(product);
+        }
+            System.out.println("Aantal producten na delete:" + productenNaDelete.size());
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

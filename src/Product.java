@@ -26,8 +26,11 @@ public class Product {
 
     }
 
-    public void setOVChipkaarten(OVChipkaart ovChipkaart) {
-        this.OVChipkaarten.add(ovChipkaart);
+
+    public void setOVChipkaarten(List<OVChipkaart> ovChipkaarten) {
+        for (OVChipkaart ovChipkaart: ovChipkaarten){
+            this.OVChipkaarten.add(ovChipkaart);
+        }
     }
 
     public void removeOVchipkaart(OVChipkaart ovChipkaart){

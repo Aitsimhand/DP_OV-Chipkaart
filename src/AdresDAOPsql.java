@@ -77,7 +77,6 @@ public class AdresDAOPsql implements AdresDAO{
         }
 
         catch (Exception e){
-            System.out.println("function adres delete failed");
             e.printStackTrace();
             return false;
         }

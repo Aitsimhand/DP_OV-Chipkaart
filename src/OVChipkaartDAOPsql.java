@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +17,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         }
     }
 
+    @Override
     public boolean save(OVChipkaart ovChipkaart){
         try {
             String query = "INSERT INTO ov_chipkaart(kaart_nummer, geldig_tot, klasse, saldo, reiziger_id) VALUES( ?, ?, ?, ?, ? )";
@@ -39,12 +37,12 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             return false;
         }
     }
-
+    @Override
     public boolean update(OVChipkaart ovChipkaart){
         try {
             String query = "UPDATE ov_chipkaart SET geldig_tot=?, klasse=?, saldo=? WHERE kaart_nummer=?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setDate(1, java.sql.Date.valueOf(ovChipkaart.getGeldigTot()));
+            preparedStatement.setDate(1, Date.valueOf(ovChipkaart.getGeldigTot()));
             preparedStatement.setInt(2, ovChipkaart.getKlasse());
             preparedStatement.setDouble(3, ovChipkaart.getSaldo());
             preparedStatement.setInt(4, ovChipkaart.getKaartNummer());
@@ -59,7 +57,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         }
 
     }
-
+    @Override
     public boolean delete(OVChipkaart ovChipkaart){
         String query = "DELETE FROM ov_chipkaart WHERE kaart_nummer=?";
         try {
@@ -103,8 +101,8 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
 
     }
 
-    public ArrayList<OVChipkaart> findAll(){
-        ArrayList<OVChipkaart> ovChipkaartArrayList = new ArrayList<>();
+    public List<OVChipkaart> findAll(){
+        List<OVChipkaart> ovChipkaartArrayList = new ArrayList<>();
         String query = "SELECT * FROM ov_chipkaart";
 
         try {

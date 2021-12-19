@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class ProductDAOPsql implements ProductDAO{
             exception.printStackTrace();
         }
     }
-
+    @Override
     public boolean save(Product product){
         String query = "INSERT INTO product(product_nummer, naam, beschrijving, prijs) VALUES(?, ?, ?, ?)";
 
@@ -40,12 +39,12 @@ public class ProductDAOPsql implements ProductDAO{
             return false;
         }
     }
-
+    @Override
     public boolean update(Product product){
 
-        String query = "UPDATE product SET product_nummer=?, naam=?, beschrijving=?, prijs=? WHERE product_nummer=?";
 
         try {
+            String query = "UPDATE product SET product_nummer=?, naam=?, beschrijving=?, prijs=? WHERE product_nummer=?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, product.getProduct_nummer());
             preparedStatement.setString(2, product.getNaam());
@@ -63,20 +62,18 @@ public class ProductDAOPsql implements ProductDAO{
         }
 
     }
-
+    @Override
     public boolean delete(Product product){
-
-        String query = "DELETE FROM product WHERE product_nummer=" + product.getProduct_nummer();
+        String query = "DELETE FROM product WHERE product_nummer=?" ;
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, product.getProduct_nummer());
             preparedStatement.execute();
-            System.out.println("Product succesvol verwijderd.");
             return true;
         }
 
         catch (Exception e){
-            System.out.println("Het is niet gelukt om product te verwijderen.");
             e.printStackTrace();
             return false;
         }
@@ -101,7 +98,6 @@ public class ProductDAOPsql implements ProductDAO{
 
                 Product product = new Product(nummer, naam, beschrijving, prijs);
 
-                product.setOVChipkaarten(ovChipkaart);
                 ovChipkaartenList.add(product);
                 System.out.println("Het ophalen van de lijst is succesvol. ");
             }
@@ -125,28 +121,16 @@ public class ProductDAOPsql implements ProductDAO{
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            ResultSet rs = preparedStatement.executeQuery();
+            ResultSet myRs = preparedStatement.executeQuery();
 
-
-
-            while(rs.next()) {
-                int nummer = rs.getInt(1);
-                String naam = rs.getString(2);
-                String beschrijving = rs.getString(3);
-                double prijs = rs.getDouble(4);
-
-                // Zet het product in een product object
-                Product product = new Product(nummer, naam, beschrijving, prijs);
-
-                // Set de OV chipkaarten van het product
-                List<OVChipkaart> OVChipkaarten = ovChipkaartDAOPsql.findAll() ;
-                if (!OVChipkaarten.isEmpty()) {
-                    for (OVChipkaart ov : OVChipkaarten) {
-                        product.setOVChipkaarten(ov);
-                    }
-                }
-
+            while(myRs.next()) {
+                Product product = new Product();
+                product.setProduct_nummer(myRs.getInt(1));
+                product.setNaam(myRs.getString(2));
+                product.setBeshrijving( myRs.getString(3));
+                product.setPrijs(myRs.getDouble(4));
                 alleProductenLijst.add(product);
+
 
             }
 
